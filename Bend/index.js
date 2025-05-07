@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const product = require("./model/product.model.js");
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 mongoose.connect("mongodb+srv://fitnessbro500:S.K.Sidharth2004@cluster0.zzgseiz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
     .then(() => {
