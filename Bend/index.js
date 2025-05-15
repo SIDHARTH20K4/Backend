@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const product = require("./model/product.model.js");
-const Product = require('./model/product.model.js');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,16 +37,34 @@ app.get('/api/products/:id', async(req, res) => {
     }
 })
 
-app.put('/api/products/:id', async(req, res) => {
+app.put('/api/product/:id', async(req, res) => {
     try {
         const { id } = req.params;
-        const Product = await product.findByIdAndUpdate(id, req.body);
-        if (!Product) {
-            return res.status(404).json({ message: "product not found" });
+
+        // Log the request
+        console.log("Updating ID:", id);
+        console.log("Data to update:", req.body);
+
+        // Try updating
+        const updatedProduct = await product.findByIdAndUpdate(
+            id,
+            req.body, {
+                new: true, // Return the updated document
+                runValidators: true // Re-run schema validators
+            }
+        );
+
+        if (!updatedProduct) {
+            return res.status(404).json({ message: "Product not found" });
         }
 
+        res.status(200).json(updatedProduct);
+    } catch (error) {
+        console.error("Update failed:", error.message);
+        res.status(500).json({ message: error.message });
     }
-})
+});
+
 
 app.post("/api/products", async(req, res) => {
     try {
