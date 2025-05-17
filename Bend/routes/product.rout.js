@@ -1,15 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const product = require("./models/product.model.js");
+const { getProducts } = require('../controllers/product.controler.js');
 
-router.get('/api/products', async(req, res) => {
-    try {
-        const products = await product.find({});
-        res.status(500).json(products);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-})
+router.get('/', getProducts);
 
 app.get('/api/products/:id', async(req, res) => {
     try {
